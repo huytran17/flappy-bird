@@ -20,18 +20,19 @@ class Background {
 class Pole {
   constructor({ game }) {
     this.min_height = 100;
-    this.max_height = 250;
+    this.max_height = 160;
     this.height = this.max_height * Math.random() + this.min_height;
     this.width = 70;
     this.speed = 1;
     this.game = game;
 
-    this.x = this.game.width - 50;
+    this.x = this.game.width;
     this.y = 0;
   }
 
   draw() {
     this.drawTopPole();
+    this.drawBottomPole();
   }
 
   drawTopPole() {
@@ -46,7 +47,7 @@ class Pole {
   drawBottomPole() {
     this.drawPole({
       x: this.x,
-      y: this.game.height,
+      y: this.game.height - this.height,
       width: this.width,
       height: this.height,
     });
@@ -89,15 +90,31 @@ class Game {
 const game = new Game();
 const background = new Background({ game });
 
-const initial_poles_count = 1;
 const poles = [];
-for (let i = 0; i < initial_poles_count; i++) {
-  poles.push(new Pole({ game }));
-}
+poles.push(new Pole({ game }));
+
+const FIRST_INDEX = 0;
+const LAST_INDEX = poles.length - 1;
+
+let first_pole = poles[FIRST_INDEX];
+let last_pole = poles[LAST_INDEX];
 
 function animate() {
   game.ctx.clearRect(0, 0, game.width, game.height);
   background.draw();
+
+  const need_add_new_pole = last_pole.x <= game.width / 1.7;
+  if (need_add_new_pole) {
+    poles.push(new Pole({ game }));
+    last_pole = poles[poles.length - 1];
+  }
+
+  const need_remove_first_pole =
+    first_pole.x <= 0 - first_pole.width && poles.length > 1;
+  if (need_remove_first_pole) {
+    poles.shift();
+    first_pole = poles[FIRST_INDEX];
+  }
 
   for (let i = 0; i < poles.length; i++) {
     poles[i].draw();
