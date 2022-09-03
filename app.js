@@ -11,9 +11,9 @@ class Background {
   }
 
   draw() {
-    const image_pattern = this.game.ctx.createPattern(this.img, "repeat"); // Create a pattern with this image, and set it to "repeat".
+    const image_pattern = this.game.ctx.createPattern(this.img, "repeat");
     this.game.ctx.fillStyle = image_pattern;
-    this.game.ctx.fillRect(0, 0, this.game.width, this.game.height); // context.fillRect(x, y, width, height);
+    this.game.ctx.fillRect(0, 0, this.game.width, this.game.height);
   }
 }
 
@@ -41,6 +41,7 @@ class Pole {
       y: this.y,
       width: this.width,
       height: this.height,
+      direction: POLE_DIRECTION.TOP,
     });
   }
 
@@ -50,12 +51,20 @@ class Pole {
       y: this.game.height - this.height,
       width: this.width,
       height: this.height,
+      direction: POLE_DIRECTION.BOTTOM,
     });
   }
 
-  drawPole({ x, y, width, height }) {
-    this.game.ctx.fillStyle = "red";
-    this.game.ctx.fillRect(x, y, width, height);
+  drawPole({ x, y, width, height, direction = POLE_DIRECTION.TOP }) {
+    const image = new Image();
+    image.src = "./assets/pole-top.png";
+
+    const is_pole_bottom = direction === POLE_DIRECTION.BOTTOM;
+    if (is_pole_bottom) {
+      image.src = "./assets/pole-bottom.png";
+    }
+
+    this.game.ctx.drawImage(image, x, y, width, height);
   }
 
   update() {
