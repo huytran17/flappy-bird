@@ -11,20 +11,22 @@ class Background {
   }
 
   draw() {
-    this.img.onload = () => {
-      this.game.ctx.drawImage(this.img, 0, 0);
-    };
+    const image_pattern = this.game.ctx.createPattern(this.img, "repeat"); // Create a pattern with this image, and set it to "repeat".
+    this.game.ctx.fillStyle = image_pattern;
+    this.game.ctx.fillRect(0, 0, this.game.width, this.game.height); // context.fillRect(x, y, width, height);
   }
 }
 
 class Pole {
   constructor({ game }) {
     this.min_height = 100;
-    this.max_height = 300;
-    this.width = 50;
+    this.max_height = 250;
+    this.height = this.max_height * Math.random() + this.min_height;
+    this.width = 70;
+    this.speed = 1;
     this.game = game;
 
-    this.x = 0;
+    this.x = this.game.width - 50;
     this.y = 0;
   }
 
@@ -33,22 +35,20 @@ class Pole {
   }
 
   drawTopPole() {
-    const height = this.max_height * Math.random() + this.min_height;
     this.drawPole({
       x: this.x,
       y: this.y,
-      width: 100,
-      height,
+      width: this.width,
+      height: this.height,
     });
   }
 
   drawBottomPole() {
-    const height = this.max_height * Math.random() + this.min_height;
     this.drawPole({
       x: this.x,
       y: this.game.height,
       width: this.width,
-      height,
+      height: this.height,
     });
   }
 
@@ -57,7 +57,10 @@ class Pole {
     this.game.ctx.fillRect(x, y, width, height);
   }
 
-  update() {}
+  update() {
+    this.x -= this.speed;
+    this.draw();
+  }
 }
 
 class Bird {
@@ -84,11 +87,26 @@ class Game {
   }
 }
 const game = new Game();
-
 const background = new Background({ game });
-background.draw();
+
+const initial_poles_count = 1;
+const poles = [];
+for (let i = 0; i < initial_poles_count; i++) {
+  poles.push(new Pole({ game }));
+}
+
+function animate() {
+  game.ctx.clearRect(0, 0, game.width, game.height);
+  background.draw();
+
+  for (let i = 0; i < poles.length; i++) {
+    poles[i].draw();
+    poles[i].update();
+  }
+
+  requestAnimationFrame(animate);
+}
 
 window.onload = function () {
-  const pole = new Pole({ game });
-  pole.draw();
+  animate();
 };
