@@ -74,11 +74,25 @@ class Pole {
 }
 
 class Bird {
-  constructor() {}
+  constructor({ game }) {
+    this.size = 40;
+    this.game = game;
+    this.up_step = 30;
+    this.down_step = 2.3;
+    this.x = 20;
+    this.y = this.game.height / 2 - this.size;
+  }
 
-  draw() {}
+  draw() {
+    const image = new Image();
+    image.src = "./assets/bird.png";
+    this.game.ctx.drawImage(image, this.x, this.y, this.size, this.size);
+  }
 
-  update() {}
+  update() {
+    this.y += this.down_step;
+    this.draw();
+  }
 }
 
 class Game {
@@ -98,6 +112,7 @@ class Game {
 }
 const game = new Game();
 const background = new Background({ game });
+const bird = new Bird({ game });
 
 const poles = [];
 poles.push(new Pole({ game }));
@@ -130,9 +145,17 @@ function animate() {
     poles[i].update();
   }
 
+  bird.update();
+
   requestAnimationFrame(animate);
 }
 
 window.onload = function () {
   animate();
 };
+
+window.addEventListener("keydown", function (evt) {
+  bird.y -= bird.up_step;
+
+  return;
+});
