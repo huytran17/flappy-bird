@@ -21,7 +21,8 @@ class Pole {
   constructor({ game }) {
     this.min_height = 100;
     this.max_height = 160;
-    this.height = this.max_height * Math.random() + this.min_height;
+    this.top_pole_height = this.max_height * Math.random() + this.min_height;
+    this.bottom_pole_height = this.max_height * Math.random() + this.min_height;
     this.width = 70;
     this.speed = 1;
     this.game = game;
@@ -40,7 +41,7 @@ class Pole {
       x: this.x,
       y: this.y,
       width: this.width,
-      height: this.height,
+      height: this.top_pole_height,
       direction: POLE_DIRECTION.TOP,
     });
   }
@@ -48,9 +49,9 @@ class Pole {
   drawBottomPole() {
     this.drawPole({
       x: this.x,
-      y: this.game.height - this.height,
+      y: this.game.height - this.bottom_pole_height,
       width: this.width,
-      height: this.height,
+      height: this.bottom_pole_height,
       direction: POLE_DIRECTION.BOTTOM,
     });
   }
@@ -77,16 +78,16 @@ class Bird {
   constructor({ game }) {
     this.size = 40;
     this.game = game;
-    this.up_step = 30;
+    this.up_step = 45;
     this.down_step = 2.3;
     this.x = 20;
     this.y = this.game.height / 2 - this.size;
+    this.image = new Image();
+    this.image.src = "./assets/bird.png";
   }
 
   draw() {
-    const image = new Image();
-    image.src = "./assets/bird.png";
-    this.game.ctx.drawImage(image, this.x, this.y, this.size, this.size);
+    this.game.ctx.drawImage(this.image, this.x, this.y, this.size, this.size);
   }
 
   update() {
@@ -150,12 +151,16 @@ function animate() {
   requestAnimationFrame(animate);
 }
 
-window.onload = function () {
-  animate();
-};
+window.onload = () => animate();
 
-window.addEventListener("keydown", function (evt) {
+window.addEventListener("keydown", () => {
+  bird.image.src = "./assets/bird-up.png";
   bird.y -= bird.up_step;
 
+  return;
+});
+
+window.addEventListener("keyup", () => {
+  bird.image.src = "./assets/bird-down.png";
   return;
 });
