@@ -6,9 +6,33 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Flappy bird</title>
     <link rel="stylesheet" type="text/css" href="./style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"
+      integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
   </head>
   <body>
-    <canvas id="canvas"></canvas>
+    <div id="game_container">
+      <canvas id="canvas"></canvas>
+      <div id="game_over_wrapper" class="d-flex justify-center">
+        <div
+          class="d-flex flex-column justify-space-between game-over white--text"
+        >
+          <h2 id="text">Game Over</h2>
+          <div id="score">1212</div>
+          <div id="replay_button">
+            <button
+              class="btn btn-depressed btn-medium brick clickable d-flex flex-column justify-center mx-auto"
+            >
+              <i class="fa fa-refresh white--text"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
   </body>
 
   <script
