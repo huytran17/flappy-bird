@@ -28,7 +28,8 @@ class Pole {
     this.game = game;
 
     this.x = this.game.width;
-    this.y = 0;
+    this.top_pole_y = 0;
+    this.bottom_pole_y = 0;
   }
 
   draw() {
@@ -39,7 +40,7 @@ class Pole {
   drawTopPole() {
     this.drawPole({
       x: this.x,
-      y: this.y,
+      y: this.top_pole_y,
       width: this.width,
       height: this.top_pole_height,
       direction: POLE_DIRECTION.TOP,
@@ -47,9 +48,10 @@ class Pole {
   }
 
   drawBottomPole() {
+    this.bottom_pole_y = this.game.height - this.bottom_pole_height;
     this.drawPole({
       x: this.x,
-      y: this.game.height - this.bottom_pole_height,
+      y: this.bottom_pole_y,
       width: this.width,
       height: this.bottom_pole_height,
       direction: POLE_DIRECTION.BOTTOM,
@@ -117,8 +119,12 @@ class Game {
     this.canvas.height = this.height;
   }
 
-  gameOver() {}
+  gameOver() {
+    return;
+  }
 }
+
+let is_key_long_press = false;
 
 const game = new Game();
 const background = new Background({ game });
@@ -143,11 +149,15 @@ function animate() {
     last_pole = poles[poles.length - 1];
   }
 
+  const need_set_new_first_pole = first_pole.x < bird.x;
+  if (need_set_new_first_pole) {
+    first_pole = poles[FIRST_INDEX + 1];
+  }
+
   const need_remove_first_pole =
     first_pole.x <= 0 - first_pole.width && poles.length > 1;
   if (need_remove_first_pole) {
     poles.shift();
-    first_pole = poles[FIRST_INDEX];
   }
 
   for (let i = 0; i < poles.length; i++) {
@@ -158,11 +168,20 @@ function animate() {
   bird.update();
 
   //check collision
+  const is_collided_with_top_pole =
+    bird.x >= first_pole.x - first_pole.width / 2 &&
+    bird.y <= first_pole.top_pole_y + first_pole.top_pole_height;
+
+  const is_collided_with_bottom_pole =
+    bird.x >= first_pole.x - first_pole.width / 2 &&
+    bird.y + bird.size >= first_pole.bottom_pole_y;
+
+  if (is_collided_with_top_pole || is_collided_with_bottom_pole) {
+    return game.gameOver();
+  }
 
   requestAnimationFrame(animate);
 }
-
-let is_key_long_press = false;
 
 window.onload = () => animate();
 
@@ -179,7 +198,3 @@ window.onkeydown = () => {
 };
 
 window.onkeyup = () => (is_key_long_press = false);
-
-window.addEventListener("keypress", () => {
-  console.log("--------");
-});
