@@ -110,6 +110,7 @@ class Game {
     this.ctx = this.canvas.getContext("2d");
     this.width = 400;
     this.height = 613;
+    this.score = 0;
 
     this.init();
   }
@@ -151,14 +152,13 @@ function animate() {
     last_pole = poles[poles.length - 1];
   }
 
-  const need_set_new_first_pole = first_pole.x < bird.x;
-  if (need_set_new_first_pole) {
+  const need_to_set_new_first_pole = first_pole.x < bird.x;
+  if (need_to_set_new_first_pole) {
     first_pole = poles[FIRST_INDEX + 1];
   }
 
-  const need_remove_first_pole =
-    first_pole.x <= 0 - first_pole.width && poles.length > 1;
-  if (need_remove_first_pole) {
+  const need_to_remove_first_pole = first_pole.x <= 0 && poles.length > 1;
+  if (need_to_remove_first_pole) {
     poles.shift();
   }
 
@@ -178,7 +178,13 @@ function animate() {
     bird.x >= first_pole.x - first_pole.width / 2 &&
     bird.y + bird.size >= first_pole.bottom_pole_y;
 
-  if (is_collided_with_top_pole || is_collided_with_bottom_pole) {
+  const is_out_of_game_container = bird.y >= game.height - bird.size;
+
+  if (
+    is_collided_with_top_pole ||
+    is_collided_with_bottom_pole ||
+    is_out_of_game_container
+  ) {
     return game.gameOver();
   }
 
