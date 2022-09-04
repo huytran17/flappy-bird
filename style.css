@@ -10,7 +10,7 @@
   position: relative;
 }
 
-#game_over_wrapper {
+#score_board {
   position: absolute;
   top: 50%;
   left: 0;
@@ -82,4 +82,8 @@
 #score {
   font-size: 24px;
   font-weight: bold;
+}
+
+.d-none {
+  display: none !important;
 }

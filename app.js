@@ -120,6 +120,8 @@ class Game {
   }
 
   gameOver() {
+    const score_board = document.getElementById("score_board");
+    score_board.classList.remove("d-none");
     return;
   }
 }
