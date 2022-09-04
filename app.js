@@ -116,7 +116,10 @@ class Game {
     this.canvas.width = this.width;
     this.canvas.height = this.height;
   }
+
+  gameOver() {}
 }
+
 const game = new Game();
 const background = new Background({ game });
 const bird = new Bird({ game });
@@ -154,15 +157,29 @@ function animate() {
 
   bird.update();
 
+  //check collision
+
   requestAnimationFrame(animate);
 }
 
+let is_key_long_press = false;
+
 window.onload = () => animate();
 
-window.addEventListener("keydown", () => {
-  bird.image.src = "./assets/bird-up.png";
-  bird.y -= bird.up_step;
-  bird.falling_distance = 0;
+window.onkeydown = () => {
+  if (!is_key_long_press) {
+    is_key_long_press = true;
+
+    bird.image.src = "./assets/bird-up.png";
+    bird.y -= bird.up_step;
+    bird.falling_distance = 0;
+  }
 
   return;
+};
+
+window.onkeyup = () => (is_key_long_press = false);
+
+window.addEventListener("keypress", () => {
+  console.log("--------");
 });
