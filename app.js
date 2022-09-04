@@ -84,6 +84,7 @@ class Bird {
     this.y = this.game.height / 2 - this.size;
     this.image = new Image();
     this.image.src = "./assets/bird.png";
+    this.falling_distance = 0;
   }
 
   draw() {
@@ -92,6 +93,11 @@ class Bird {
 
   update() {
     this.y += this.down_step;
+    this.falling_distance += 1;
+    if (this.falling_distance >= FALLING_DISTANCE.FALLING_DOWN) {
+      this.image.src = "./assets/bird-down.png";
+    }
+
     this.draw();
   }
 }
@@ -156,11 +162,7 @@ window.onload = () => animate();
 window.addEventListener("keydown", () => {
   bird.image.src = "./assets/bird-up.png";
   bird.y -= bird.up_step;
+  bird.falling_distance = 0;
 
-  return;
-});
-
-window.addEventListener("keyup", () => {
-  bird.image.src = "./assets/bird-down.png";
   return;
 });
